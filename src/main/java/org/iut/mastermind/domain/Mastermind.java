@@ -53,10 +53,4 @@ public class Mastermind {
         partieRepository.update(partie);
         return ResultatPartie.create(reponse, partie.isTerminee());
     }
-
-    // si la partie en cours est vide, on renvoie false
-    // sinon, on évalue si la partie est terminée
-    private boolean isJeuEnCours(Optional<Partie> partieEnCours) {
-        return partieEnCours.isPresent() && !partieEnCours.get().isTerminee();
-    }
 }
