@@ -46,20 +46,16 @@ public class Partie {
     // si toutes les lettres sont correctement placées,
     // on a terminé la partie
     public Reponse tourDeJeu(String motPropose) {
-        if (nbEssais<NB_ESSAIS_MAX) {
-            nbEssais++;
-            MotSecret motSecret = new MotSecret(motADeviner);
-            Reponse reponse = motSecret.compareProposition(motPropose);
-            if (reponse.lettresToutesPlacees()) {
-                done();
-            }
-            if (nbEssais >= NB_ESSAIS_MAX) {
-                done();
-            }
-            return reponse;
+        if (nbEssais>=NB_ESSAIS_MAX) {
+            throw new IllegalArgumentException("Vous avez dépasser le nombre d'essaies");
         }
-        return null;
-
+        nbEssais++;
+        MotSecret motSecret = new MotSecret(motADeviner);
+        Reponse reponse = motSecret.compareProposition(motPropose);
+        if (isTerminee()) {
+            done();
+        }
+        return reponse;
     }
 
     // getter pour savoir si la partie est terminée
