@@ -37,16 +37,12 @@ public class Mastermind {
     // si la partie n'est pas une partie en cours, on renvoie une erreur
     // sinon on retourne le resultat du mot proposé
     public ResultatPartie evaluation(Joueur joueur, String motPropose) {
-        Optional<Partie> partieEnCours = partieRepository.getPartieEnregistree(joueur);
-        if (partieEnCours.isEmpty()) {
-            throw new IllegalStateException("Pas de partie en cours pour le joueur " + joueur.getNom());
-        }
-        if (partieEnCours.get().isTerminee()) {
-            return ResultatPartie.ERROR;
-        }
-        Partie partie = partieEnCours.get();
-
-        return calculeResultat(partie, motPropose);
+          Partie partieEncours = partieRepository.getPartieEnregistree(joueur).orElseThrow(
+                  () -> new IllegalStateException("Pas de partie en cours pour le joueur " + joueur.getNom()));
+          if (partieEncours.isTerminee()) {
+              return ResultatPartie.ERROR;
+          }
+          return calculeResultat(partieEncours, motPropose);
     }
 
     // on évalue le résultat du mot proposé pour le tour de jeu
