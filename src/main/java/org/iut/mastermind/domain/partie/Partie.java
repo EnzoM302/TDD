@@ -9,12 +9,14 @@ public class Partie {
     private final String motADeviner;
     private int nbEssais;
     private boolean partieTerminee;
+    private final MotSecret motSecret;
 
     private Partie(Joueur joueur, String motADeviner, int nbEssais, boolean partieTerminee) {
         this.joueur = joueur;
         this.motADeviner = motADeviner;
         this.nbEssais = nbEssais;
         this.partieTerminee = partieTerminee;
+        this.motSecret = new MotSecret(motADeviner);
     }
 
     public static Partie nouvelle(Joueur joueur, String motADeviner) {
@@ -46,18 +48,16 @@ public class Partie {
     // si toutes les lettres sont correctement placées,
     // on a terminé la partie
     public Reponse tourDeJeu(String motPropose) {
-        if (nbEssais>=NB_ESSAIS_MAX) {
-            throw new IllegalArgumentException("Vous avez dépasser le nombre d'essaies");
+        if (partieTerminee || nbEssais >= NB_ESSAIS_MAX) {
+            throw new IllegalStateException("La partie est terminée");
         }
         nbEssais++;
-        MotSecret motSecret = new MotSecret(motADeviner);
         Reponse reponse = motSecret.compareProposition(motPropose);
-        if (isTerminee()) {
+        if (reponse.lettresToutesPlacees() || nbEssais >= NB_ESSAIS_MAX) {
             done();
         }
         return reponse;
     }
-
     // getter pour savoir si la partie est terminée
     public boolean isTerminee() {
         return partieTerminee;
